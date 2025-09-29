@@ -61,19 +61,6 @@ functions:
             type: token
             identitySource: method.request.header.Authorization
 
-  # Protected route (requires Lambda Authorizer)
-  postIngest:
-    handler: src/handlers/ingest.post
-    timeout: 29
-    events:
-      - http:
-          path: ingest
-          method: post
-          authorizer:
-            name: jwtAuthorizer
-            type: token
-            identitySource: method.request.header.Authorization
-
 package:
   patterns:
     - "!**/*"
