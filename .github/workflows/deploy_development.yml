@@ -1,0 +1,66 @@
+name: Deploy Development Serverless API
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - development
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Serverless + plugins
+        run: |
+          npm install -g serverless
+          npm install --save-dev serverless-python-requirements
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8
+
+      - name: Lint (flake8)
+        run: |
+          # Fail the build if lint errors exist
+          flake8 src --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 src --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
+
+      - name: Configure AWS credentials
+        if: success()
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Set env
+        if: success()
+        run: |
+          echo "JWT_AUDIENCE=${{ secrets.JWT_AUDIENCE }}" >> $GITHUB_ENV
+          echo "CLERK_JWKS_URL=${{ secrets.CLERK_JWKS_URL_DEV }}" >> $GITHUB_ENV
+          echo "CLERK_ISSUER_URL=${{ secrets.CLERK_ISSUER_URL_DEV }}" >> $GITHUB_ENV
+          echo "DB_HOST=${{ secrets.DB_HOST_DEV }}" >> $GITHUB_ENV
+          echo "DB_PORT=${{ secrets.DB_PORT_DEV }}" >> $GITHUB_ENV
+          echo "DB_USER=${{ secrets.DB_USER_DEV }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_DEV }}" >> $GITHUB_ENV
+          echo "DB_NAME=${{ secrets.DB_NAME_DEV }}" >> $GITHUB_ENV
+
+      - name: Deploy
+        if: success()
+        run: serverless deploy --stage dev
