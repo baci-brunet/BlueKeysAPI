@@ -48,10 +48,10 @@ functions:
       - http:
           path: health
           method: get
-        cors:
-            origins: ${self:custom.cors.origins}
-            headers: ${self:custom.cors.headers}
-            allowCredentials: ${self:custom.cors.allowCredentials}
+          cors:
+              origins: ${self:custom.cors.origins}
+              headers: ${self:custom.cors.headers}
+              allowCredentials: ${self:custom.cors.allowCredentials}
 
   # Protected route (requires Lambda Authorizer)
   getReports:
