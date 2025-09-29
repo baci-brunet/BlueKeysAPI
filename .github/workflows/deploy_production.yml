@@ -1,4 +1,4 @@
-name: Deploy Serverless API
+name: Deploy Production Serverless API
 
 on:
   pull_request:
