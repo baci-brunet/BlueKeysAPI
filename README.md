@@ -8,7 +8,6 @@
 ## Endpoints
 - `GET /health` — public
 - `GET /reports` — protected (Lambda authorizer)
-- `POST /ingest` — protected
 
 ## Env Vars (GitHub Secrets / local shell)
 JWT_AUDIENCE=aro-api
@@ -22,7 +21,7 @@ DB_NAME=...
 
 ## Clerk token
 Create a JWT template with:
-- `aud` = `aro-api` (matches `JWT_AUDIENCE`)
+- `aud` = `blue-keys-api` (matches `JWT_AUDIENCE`)
 - include `org_id`, `email`, and optional `scope`, `roles`
 
 ## Deploy
