@@ -1,0 +1,92 @@
+service: aro-analytics-api
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  architecture: x86_64
+  environment:
+    STAGE: ${self:provider.stage}
+    # Clerk / JWT
+    JWT_AUDIENCE: ${env:JWT_AUDIENCE}           # e.g., aro-api
+    CLERK_ISSUER_URL: ${env:CLERK_ISSUER_URL}   # e.g., https://your-domain.clerk.accounts.dev/
+    CLERK_JWKS_URL: ${env:CLERK_JWKS_URL}       # https://YOUR-CLERK-DOMAIN/.well-known/jwks.json
+    # Database (RDS MySQL)
+    DB_HOST: ${env:DB_HOST}
+    DB_PORT: ${env:DB_PORT, '3306'}
+    DB_USER: ${env:DB_USER}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+    DB_NAME: ${env:DB_NAME}
+  iam:
+    role:
+      statements:
+        # Minimal permissions for CloudWatch Logs
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource: "*"
+
+functions:
+  # Lambda Authorizer
+  jwtAuthorizer:
+    handler: src/authorizer/authorizer.lambda_handler
+    timeout: 10
+    environment:
+      CLERK_JWKS_URL: ${self:provider.environment.CLERK_JWKS_URL}
+      CLERK_ISSUER: ${self:provider.environment.CLERK_ISSUER_URL}
+      JWT_AUDIENCE: ${self:provider.environment.JWT_AUDIENCE}
+
+  # Public route (no auth)
+  health:
+    handler: src/handlers/health.get
+    events:
+      - http:
+          path: health
+          method: get
+
+  # Protected route (requires Lambda Authorizer)
+  getReports:
+    handler: src/handlers/reports.get
+    timeout: 29
+    events:
+      - http:
+          path: reports
+          method: get
+          authorizer:
+            name: jwtAuthorizer
+            type: token
+            identitySource: method.request.header.Authorization
+
+  # Protected route (requires Lambda Authorizer)
+  postIngest:
+    handler: src/handlers/ingest.post
+    timeout: 29
+    events:
+      - http:
+          path: ingest
+          method: post
+          authorizer:
+            name: jwtAuthorizer
+            type: token
+            identitySource: method.request.header.Authorization
+
+package:
+  patterns:
+    - "!**/*"
+    - "src/**"
+    - "requirements.txt"
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    slim: true
+    strip: false
+    useStaticCache: true
+    useDownloadCache: true

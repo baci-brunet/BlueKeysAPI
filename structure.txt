@@ -1,0 +1,19 @@
+aro-analytics-api/
+├─ serverless.yml
+├─ README.md
+├─ requirements.txt
+├─ src/
+│  ├─ authorizer/
+│  │  └─ authorizer.py
+│  ├─ handlers/
+│  │  ├─ health.py
+│  │  ├─ reports.py
+│  │  └─ ingest.py
+│  ├─ lib/
+│  │  ├─ auth.py
+│  │  └─ db.py
+│  └─ utils/
+│     └─ response.py
+└─ .github/
+   └─ workflows/
+      └─ deploy.yml
