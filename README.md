@@ -30,5 +30,4 @@ pip install -r requirements.txt
 serverless deploy --stage dev
 
 ## Notes
-- In REST API, Lambda authorizer context is available at:
-  `event.requestContext.authorizer`
+- In REST API, Lambda authorizer context is available at: `event.requestContext.authorizer`
