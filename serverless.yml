@@ -69,6 +69,22 @@ functions:
             origins: ${self:custom.cors.origins}
             headers: ${self:custom.cors.headers}
             allowCredentials: ${self:custom.cors.allowCredentials}
+  
+  getProfileInfo:
+    handler: src/handlers/profile.post
+    timeout: 29
+    events:
+      - http:
+          path: profile
+          method: post
+          authorizer:
+            name: jwtAuthorizer
+            type: token
+            identitySource: method.request.header.Authorization
+          cors:
+            origins: ${self:custom.cors.origins}
+            headers: ${self:custom.cors.headers}
+            allowCredentials: ${self:custom.cors.allowCredentials}
 
 package:
   patterns:
