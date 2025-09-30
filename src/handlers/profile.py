@@ -1,10 +1,9 @@
 import json
-from src.utils.response import ok, bad_request, with_cors
+from src.utils.response import forbidden, ok, bad_request
 from src.lib.auth import get_auth_context
 from src.lib.acl import user_can_access_restaurant
 from src.lib.db import fetch_all
 
-@with_cors
 def post(event, context):
     uid = None
     body = event.get("body")
