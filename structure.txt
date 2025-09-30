@@ -8,8 +8,9 @@ aro-analytics-api/
 │  ├─ handlers/
 │  │  ├─ health.py
 │  │  ├─ reports.py
-│  │  └─ ingest.py
+│  │  └─ profile.py
 │  ├─ lib/
+      ├─ acl.py
 │  │  ├─ auth.py
 │  │  └─ db.py
 │  └─ utils/
