@@ -27,9 +27,9 @@ def _resp(code, body=None, headers=None):
         "body": json.dumps(body if body is not None else {})
     }
 
-def ok(body=None):            return _resp(200, body or {"ok": True})
-def created(body=None):       return _resp(201, body or {"ok": True})
-def bad_request(msg="Bad Request"):  return _resp(400, {"error": msg})
-def unauthorized(msg="Unauthorized"):return _resp(401, {"error": msg})
-def forbidden(msg="Forbidden"):       return _resp(403, {"error": msg})
+def ok(body=None): return _resp(200, body or {"ok": True})
+def created(body=None): return _resp(201, body or {"ok": True})
+def bad_request(msg="Bad Request"): return _resp(400, {"error": msg})
+def unauthorized(msg="Unauthorized"): return _resp(401, {"error": msg})
+def forbidden(msg="Forbidden"): return _resp(403, {"error": msg})
 def server_error(msg="Internal Server Error"): return _resp(500, {"error": msg})
