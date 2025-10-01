@@ -49,18 +49,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Set env
-        if: success()
-        run: |
-          echo "JWT_AUDIENCE=${{ secrets.JWT_AUDIENCE }}" >> $GITHUB_ENV
-          echo "CLERK_JWKS_URL=${{ secrets.CLERK_JWKS_URL_DEV }}" >> $GITHUB_ENV
-          echo "CLERK_ISSUER_URL=${{ secrets.CLERK_ISSUER_URL_DEV }}" >> $GITHUB_ENV
-          echo "DB_HOST=${{ secrets.DB_HOST_DEV }}" >> $GITHUB_ENV
-          echo "DB_PORT=${{ secrets.DB_PORT_DEV }}" >> $GITHUB_ENV
-          echo "DB_USER=${{ secrets.DB_USER_DEV }}" >> $GITHUB_ENV
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_DEV }}" >> $GITHUB_ENV
-          echo "DB_NAME=${{ secrets.DB_NAME_DEV }}" >> $GITHUB_ENV
-
       - name: Deploy
         if: success()
         run: serverless deploy --stage dev
+        env:
+          JWT_AUDIENCE: ${{ secrets.JWT_AUDIENCE }}
+          CLERK_ISSUER_URL: ${{ secrets.CLERK_ISSUER_URL_DEV }}
+          DB_HOST: ${{ secrets.DB_HOST_DEV }}
+          DB_PORT: ${{ secrets.DB_PORT_DEV }}
+          DB_USER: ${{ secrets.DB_USER_DEV }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD_DEV }}
+          DB_NAME: ${{ secrets.DB_NAME_DEV }}
