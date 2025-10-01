@@ -42,7 +42,9 @@ provider:
         identitySource: "$request.header.Authorization"
         jwt:
           issuerUrl: ${env:CLERK_ISSUER_URL}    # e.g. https://your-subdomain.clerk.accounts.dev
-          audience: ${env:JWT_AUDIENCE}
+          audience:
+            - ${env:JWT_AUDIENCE, 'blue-keys-api'}   # list, with a dev default
+
 
 functions:
   health:
