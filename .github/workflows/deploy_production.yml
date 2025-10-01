@@ -55,6 +55,9 @@ jobs:
           echo "JWT_AUDIENCE=${{ secrets.JWT_AUDIENCE }}" >> $GITHUB_ENV
           echo "CLERK_JWKS_URL=${{ secrets.CLERK_JWKS_URL }}" >> $GITHUB_ENV
           echo "CLERK_ISSUER_URL=${{ secrets.CLERK_ISSUER_URL }}" >> $GITHUB_ENV
+          echo "LAMBDA_SECURITY_GROUP_ID=${{ secrets.LAMBDA_SECURITY_GROUP_ID }}" >> $GITHUB_ENV
+          echo "LAMBDA_SUBNET_ID_1=${{ secrets.LAMBDA_SUBNET_ID_1 }}" >> $GITHUB_ENV
+          echo "LAMBDA_SUBNET_ID_2=${{ secrets.LAMBDA_SUBNET_ID_2 }}" >> $GITHUB_ENV
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
           echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
