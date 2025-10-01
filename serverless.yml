@@ -37,7 +37,7 @@ provider:
         identitySource: "$request.header.Authorization"
         issuerUrl: ${env:CLERK_ISSUER_URL}           # must match token 'iss' exactly (Clerk usually has trailing '/')
         audience:
-          - ${env:JWT_AUDIENCE, blue-keys-api}       # list + safe default
+          - ${env:JWT_AUDIENCE}       # list + safe default
 
 
 functions:
