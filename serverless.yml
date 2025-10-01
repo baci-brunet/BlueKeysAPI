@@ -26,24 +26,18 @@ provider:
   httpApi:
     useProviderStage: true
     cors:
-      allowedOrigins:
-        - "*"
-      allowedHeaders:
-        - Authorization
-        - Content-Type
-      allowedMethods:
-        - GET
-        - POST
-        - OPTIONS
+      allowedOrigins: ["*"]
+      allowedHeaders: [Authorization, Content-Type]
+      allowedMethods: [GET, POST, OPTIONS]
       allowCredentials: false
+
     authorizers:
       clerkJwt:
         type: jwt
         identitySource: "$request.header.Authorization"
-        jwt:
-          issuerUrl: ${env:CLERK_ISSUER_URL}    # e.g. https://your-subdomain.clerk.accounts.dev
-          audience:
-            - ${env:JWT_AUDIENCE, 'blue-keys-api'}   # list, with a dev default
+        issuerUrl: ${env:CLERK_ISSUER_URL}           # must match token 'iss' exactly (Clerk usually has trailing '/')
+        audience:
+          - ${env:JWT_AUDIENCE, blue-keys-api}       # list + safe default
 
 
 functions:
