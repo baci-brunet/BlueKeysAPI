@@ -19,6 +19,8 @@ provider:
     DB_USER: ${env:DB_USER}
     DB_PASSWORD: ${env:DB_PASSWORD}
     DB_NAME: ${env:DB_NAME}
+  iamManagedPolicies:
+    - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
   iam:
     role:
       statements:
@@ -55,6 +57,12 @@ functions:
   # Protected route (requires Lambda Authorizer)
   getReports:
     handler: src/handlers/reports.get
+    vpc:
+      securityGroupIds:
+        - ${env:LAMBDA_SECURITY_GROUP_ID}
+      subnetIds:
+        - ${env:LAMBDA_SUBNET_ID_1}
+        - ${env:LAMBDA_SUBNET_ID_2}
     timeout: 29
     events:
       - http:
@@ -71,6 +79,12 @@ functions:
   
   getProfileInfo:
     handler: src/handlers/profile.post
+    vpc:
+      securityGroupIds:
+        - ${env:LAMBDA_SECURITY_GROUP_ID}
+      subnetIds:
+        - ${env:LAMBDA_SUBNET_ID_1}
+        - ${env:LAMBDA_SUBNET_ID_2}
     timeout: 29
     events:
       - http:
