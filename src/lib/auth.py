@@ -1,8 +1,24 @@
-from typing import Any, Dict
+# src/lib/auth.py
+from typing import Any, Dict, Optional
 
-def get_auth_context(event: Dict[str, Any]) -> Dict[str, Any]:
-    return event.get("requestContext", {}).get("authorizer", {}) or {}
+def claims_from_event(event: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    HTTP API (v2) + built-in JWT authorizer puts claims here:
+      event.requestContext.authorizer.jwt.claims
+    """
+    return (
+        event.get("requestContext", {})
+             .get("authorizer", {})
+             .get("jwt", {})
+             .get("claims", {})
+        or {}
+    )
 
-def has_scope(context: Dict[str, Any], required: str) -> bool:
-    scope = context.get("scope", "")
-    return required in set(scope.split()) if isinstance(scope, str) else False
+def get_user_id(event: Dict[str, Any]) -> Optional[str]:
+    return claims_from_event(event).get("sub")
+
+def get_org_id(event: Dict[str, Any]) -> Optional[str]:
+    return claims_from_event(event).get("org_id")
+
+def get_role(event: Dict[str, Any]) -> Optional[str]:
+    return claims_from_event(event).get("role")

@@ -1,42 +1,36 @@
 import json
-from src.utils.response import forbidden, ok, bad_request
-from src.lib.auth import get_auth_context
-from src.lib.acl import user_can_access_restaurant
+from src.utils.response import ok, bad_request, forbidden
+from src.lib.auth import get_user_id, get_org_id
+from src.lib.acl import resolve_account_id_from_org
 from src.lib.db import fetch_all
 
 def post(event, context):
-    uid = None
-    body = event.get("body")
-    if body:
-        try:
-            payload = json.loads(body)
-        except json.JSONDecodeError:
-            return bad_request("Invalid JSON body")
-        uid = payload.get("clerk_user_id")
+    # 1) Identity & tenant from verified JWT claims (set by HTTP API JWT authorizer)
+    clerk_user_id = get_user_id(event)   # JWT 'sub'
+    org_id = get_org_id(event)           # your custom 'org_id' claim
 
-    # 2) Fallback: querystring (useful for quick testing)
-    if uid is None:
-        qs = event.get("queryStringParameters") or {}
-        uid = qs.get("clerk_user_id")
+    if not clerk_user_id:
+        return forbidden("Missing subject in token")
+    if not org_id:
+        return forbidden("No active organization in token")
 
-    if uid is None:
-        return bad_request("clerk_user_id is required")
+    # 2) Map org_id -> account_id to enforce tenant boundary
+    account_id = resolve_account_id_from_org(org_id)
+    if account_id is None:
+        return forbidden("Unknown organization")
 
-    # 3) Validate type (must be int)
-    try:
-        clerk_id = str(id)
-    except (TypeError, ValueError):
-        return bad_request("clerk_user_id must be a string")
-
-    # 5) Fetch & return data (tweak LIMIT as needed)
+    # 3) Fetch user *within* the caller's tenant (account)
     rows = fetch_all(
         """
-        SELECT id, email, created_at
+        SELECT id, email, clerk_user_id, created_at
         FROM users
-        WHERE clerk_user_id = %s
-        LIMIT 10
+        WHERE clerk_user_id = %s AND account_id = %s
+        LIMIT 1
         """,
-        (clerk_id,),
+        (clerk_user_id, account_id),
     )
 
-    return ok({"clerk_user_id": clerk_id, "data": rows})
+    if not rows:
+        return bad_request("User not found")
+
+    return ok({"user": rows[0]})
