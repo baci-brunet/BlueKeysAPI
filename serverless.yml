@@ -11,7 +11,7 @@ provider:
   environment:
     STAGE: ${self:provider.stage}
     JWT_AUDIENCE: ${env:JWT_AUDIENCE}
-    CLERK_ISSUER_URL_BASE: ${env:CLERK_ISSUER_URL_BASE}
+    CLERK_ISSUER_URL: ${env:CLERK_ISSUER_URL}
     DB_HOST: ${env:DB_HOST}
     DB_PORT: ${env:DB_PORT, '3306'}
     DB_USER: ${env:DB_USER}
@@ -41,7 +41,7 @@ provider:
         type: jwt
         identitySource: "$request.header.Authorization"
         jwt:
-          issuerUrl: ${env:CLERK_ISSUER_URL_BASE}    # e.g. https://your-subdomain.clerk.accounts.dev
+          issuerUrl: ${env:CLERK_ISSUER_URL}    # e.g. https://your-subdomain.clerk.accounts.dev
           audience:
             - ${env:JWT_AUDIENCE}
 
