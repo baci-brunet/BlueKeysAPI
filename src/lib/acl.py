@@ -1,4 +1,5 @@
-from typing import Optional
+# src/lib/acl.py  (no change needed if you pass a dict with "org_id")
+from typing import Optional, Dict
 from src.lib.db import fetch_all
 
 def resolve_account_id_from_org(org_id: Optional[str]) -> Optional[int]:
@@ -14,6 +15,6 @@ def restaurant_belongs_to_account(restaurant_id: int, account_id: int) -> bool:
     )
     return bool(rows)
 
-def user_can_access_restaurant(auth_ctx: dict, restaurant_id: int) -> bool:
+def user_can_access_restaurant(auth_ctx: Dict, restaurant_id: int) -> bool:
     acct_id = resolve_account_id_from_org(auth_ctx.get("org_id"))
     return bool(acct_id) and restaurant_belongs_to_account(restaurant_id, acct_id)
