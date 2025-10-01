@@ -31,7 +31,7 @@ def post(event, context):
     # 5) Fetch & return data (tweak LIMIT as needed)
     rows = fetch_all(
         """
-        SELECT user_id, email, created_at
+        SELECT id, email, created_at
         FROM users
         WHERE clerk_user_id = %s
         LIMIT 10
