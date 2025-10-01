@@ -23,14 +23,9 @@ provider:
     - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
   iam:
     role:
-      statements:
-        # Minimal permissions for CloudWatch Logs
-        - Effect: Allow
-          Action:
-            - logs:CreateLogGroup
-            - logs:CreateLogStream
-            - logs:PutLogEvents
-          Resource: "*"
+      managedPolicies:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
 
 functions:
   # Lambda Authorizer
