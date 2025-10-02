@@ -1,5 +1,7 @@
 # src/utils/response.py
 import json
+from datetime import datetime, date
+from decimal import Decimal
 from typing import Any, Dict, Optional, Callable
 
 JSON_HEADERS: Dict[str, str] = {"Content-Type": "application/json"}
@@ -7,11 +9,20 @@ JSON_HEADERS: Dict[str, str] = {"Content-Type": "application/json"}
 def _headers(extra: Optional[Dict[str, str]] = None) -> Dict[str, str]:
     return {**JSON_HEADERS, **(extra or {})}
 
+def _json_default(o: Any):
+    if isinstance(o, (datetime, date)):
+        # MySQL DATETIME has no tz—this yields "YYYY-MM-DDTHH:MM:SS"
+        return o.isoformat()
+    if isinstance(o, Decimal):
+        # Keep numeric semantics
+        return float(o)
+    return str(o)  # final fallback, still safe
+
 def _resp(status: int, body: Any = None, headers: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
     return {
         "statusCode": status,
         "headers": _headers(headers),
-        "body": json.dumps({} if body is None else body, sort_keys=True, default=str),
+        "body": json.dumps({} if body is None else body, sort_keys=False, default=_json_default),
     }
 
 # Success
