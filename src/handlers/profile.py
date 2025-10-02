@@ -24,10 +24,10 @@ def post(event, context):
         """
         SELECT id, email, clerk_user_id, created_at
         FROM users
-        WHERE clerk_user_id = "%s"
+        WHERE clerk_user_id = %s
         LIMIT 1
         """,
-        (clerk_user_id, account_id),
+        (clerk_user_id),
     )
 
     if not rows:
