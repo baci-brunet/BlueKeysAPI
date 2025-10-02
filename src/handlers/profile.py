@@ -4,7 +4,7 @@ from src.lib.auth import get_user_id, get_org_id
 from src.lib.acl import resolve_account_id_from_org
 from src.lib.db import fetch_all
 
-def post(event, context):
+def get(event, context):
     # 1) Identity & tenant from verified JWT claims (set by HTTP API JWT authorizer)
     clerk_user_id = get_user_id(event)   # JWT 'sub'
     org_id = get_org_id(event)           # your custom 'org_id' claim
