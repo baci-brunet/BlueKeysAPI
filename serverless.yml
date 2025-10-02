@@ -36,9 +36,9 @@ provider:
       clerkJwt:
         type: jwt
         identitySource: "$request.header.Authorization"
-        issuerUrl: ${env:CLERK_ISSUER_URL}           # must match token 'iss' exactly (Clerk usually has trailing '/')
+        issuerUrl: ${env:CLERK_ISSUER_URL}           
         audience:
-          - ${env:JWT_AUDIENCE}       # list + safe default
+          - ${env:JWT_AUDIENCE}   
 
 
 functions:
@@ -50,10 +50,13 @@ functions:
           method: GET
 
   postUserInfo:
-    handler: src/handlers/profile.post
+    handler: src/handlers/profile.post 
     vpc:
-      securityGroupIds: [${env:LAMBDA_SECURITY_GROUP_ID}]
-      subnetIds: [${env:LAMBDA_SUBNET_ID_1}, ${env:LAMBDA_SUBNET_ID_2}]
+      securityGroupIds:
+        - ${env:LAMBDA_SECURITY_GROUP_ID}        
+      subnetIds:
+        - ${env:LAMBDA_SUBNET_ID_1}
+        - ${env:LAMBDA_SUBNET_ID_2}
     timeout: 29
     events:
       - httpApi:
@@ -65,8 +68,11 @@ functions:
   reportsGet:
     handler: src/handlers/reports.get
     vpc:
-      securityGroupIds: [${env:LAMBDA_SECURITY_GROUP_ID}]
-      subnetIds: [${env:LAMBDA_SUBNET_ID_1}, ${env:LAMBDA_SUBNET_ID_2}]
+      securityGroupIds:
+        - ${env:LAMBDA_SECURITY_GROUP_ID}      
+      subnetIds:
+        - ${env:LAMBDA_SUBNET_ID_1}
+        - ${env:LAMBDA_SUBNET_ID_2}
     timeout: 29
     events:
       - httpApi:
