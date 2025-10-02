@@ -60,3 +60,6 @@ jobs:
           DB_USER: ${{ secrets.DB_USER_DEV }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD_DEV }}
           DB_NAME: ${{ secrets.DB_NAME_DEV }}
+          LAMBDA_SECURITY_GROUP_ID: ${{ secrets.LAMBDA_SECURITY_GROUP_ID }}
+          LAMBDA_SUBNET_ID_1: ${{ secrets.LAMBDA_SUBNET_ID_1 }}
+          LAMBDA_SUBNET_ID_2: ${{ secrets.LAMBDA_SUBNET_ID_2 }}
