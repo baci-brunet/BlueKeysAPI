@@ -11,7 +11,7 @@ def _resp(status: int, body: Any = None, headers: Optional[Dict[str, str]] = Non
     return {
         "statusCode": status,
         "headers": _headers(headers),
-        "body": json.dumps({} if body is None else body),
+        "body": json.dumps({} if body is None else body, sort_keys=True, default=str),
     }
 
 # Success
