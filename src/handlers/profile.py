@@ -22,7 +22,7 @@ def post(event, context):
     # 3) Fetch user *within* the caller's tenant (account)
     rows = fetch_all(
         """
-        SELECT id, email, clerk_user_id, created_at
+        SELECT id, email, clerk_user_id, DATE_FORMAT(created_at, '%Y-%m-%dT%H:%i:%s') AS created_at
         FROM users
         WHERE clerk_user_id = %s
         LIMIT 1
