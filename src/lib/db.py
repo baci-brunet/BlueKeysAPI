@@ -1,4 +1,4 @@
-import os
+import os, traceback
 import pymysql
 from typing import Optional, Any, Dict, List, Tuple
 
