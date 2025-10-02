@@ -22,6 +22,7 @@ provider:
     role:
       managedPolicies:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
 
   httpApi:
     useProviderStage: true
@@ -50,6 +51,9 @@ functions:
 
   postUserInfo:
     handler: src/handlers/profile.post
+    vpc:
+      securityGroupIds: [${env:LAMBDA_SECURITY_GROUP_ID}]
+      subnetIds: [${env:LAMBDA_SUBNET_ID_1}, ${env:LAMBDA_SUBNET_ID_2}]
     timeout: 29
     events:
       - httpApi:
@@ -60,6 +64,9 @@ functions:
 
   reportsGet:
     handler: src/handlers/reports.get
+    vpc:
+      securityGroupIds: [${env:LAMBDA_SECURITY_GROUP_ID}]
+      subnetIds: [${env:LAMBDA_SUBNET_ID_1}, ${env:LAMBDA_SUBNET_ID_2}]
     timeout: 29
     events:
       - httpApi:
@@ -69,10 +76,7 @@ functions:
             name: clerkJwt
 
 package:
-  patterns:
-    - "!**/*"
-    - "src/**"
-    - "requirements.txt"
+  patterns: ["!**/*","src/**","requirements.txt"]
 
 plugins:
   - serverless-python-requirements

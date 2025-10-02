@@ -1,7 +1,6 @@
 # src/utils/response.py
 import json
 from typing import Any, Dict, Optional, Callable
-import traceback
 
 JSON_HEADERS: Dict[str, str] = {"Content-Type": "application/json"}
 
