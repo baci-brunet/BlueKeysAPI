@@ -95,7 +95,37 @@ functions:
           method: GET
           authorizer:
             name: clerkJwt
+  
+  restaurants:
+    handler: src/handlers/restaurants.get
+    vpc:
+      securityGroupIds:
+        - ${env:LAMBDA_SG_ID}
+      subnetIds:
+        - ${env:LAMBDA_SUBNET_ID_1}
+        - ${env:LAMBDA_SUBNET_ID_2}
+    events:
+      - httpApi:
+          path: /restaurants
+          method: GET
+          authorizer:
+            name: clerkJwt
 
+  restaurantsCreate:
+    handler: src/handlers/restaurants.post
+    vpc:
+      securityGroupIds:
+        - ${env:LAMBDA_SG_ID}
+      subnetIds:
+        - ${env:LAMBDA_SUBNET_ID_1}
+        - ${env:LAMBDA_SUBNET_ID_2}
+    events:
+      - httpApi:
+          path: /restaurants
+          method: POST
+          authorizer:
+            name: clerkJwt
+    
 package:
   patterns: ["!**/*","src/**","requirements.txt"]
 
