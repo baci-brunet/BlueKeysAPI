@@ -80,8 +80,8 @@ functions:
           authorizer:
             name: clerkJwt
 
-  reportsGet:
-    handler: src/handlers/reports.get
+  getReport:
+    handler: src/handlers/reports.post
     vpc:
       securityGroupIds:
         - ${env:LAMBDA_SECURITY_GROUP_ID}      
@@ -92,7 +92,7 @@ functions:
     events:
       - httpApi:
           path: /reports
-          method: GET
+          method: POST
           authorizer:
             name: clerkJwt
   
