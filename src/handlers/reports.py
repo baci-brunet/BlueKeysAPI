@@ -27,7 +27,7 @@ def post(event, context):
     # 5) Fetch & return data (tweak LIMIT as needed)
     rows = fetch_all(
         """
-        SELECT checkID, diner_id, check_total, check_date
+        SELECT checkID, dinerID, totalSpend, created_at
         FROM checks
         WHERE restaurant_id = %s
         ORDER BY check_date DESC
