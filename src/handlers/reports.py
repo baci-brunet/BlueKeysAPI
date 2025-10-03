@@ -4,7 +4,7 @@ from src.lib.auth import get_org_id
 from src.lib.acl import user_can_access_restaurant
 from src.lib.db import fetch_all
 
-def get(event, context):
+def post(event, context):
         # Parse JSON body
     try:
         body = json.loads(event.get("body") or "{}")
