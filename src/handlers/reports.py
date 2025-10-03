@@ -29,8 +29,8 @@ def post(event, context):
         """
         SELECT checkID, dinerID, totalSpend, created_at
         FROM checks
-        WHERE restaurant_id = %s
-        ORDER BY check_date DESC
+        WHERE restaurantID = %s
+        ORDER BY created_at DESC
         LIMIT 50
         """,
         (restaurant_id,),
