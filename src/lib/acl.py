@@ -10,7 +10,7 @@ def resolve_account_id_from_org(org_id: Optional[str]) -> Optional[int]:
 
 def restaurant_belongs_to_account(restaurant_id: int, account_id: int) -> bool:
     rows = fetch_all(
-        "SELECT 1 FROM restaurants WHERE id = %s AND account_id = %s LIMIT 1",
+        "SELECT 1 FROM restaurants WHERE restaurantID = %s AND account_id = %s LIMIT 1",
         (restaurant_id, account_id)
     )
     return bool(rows)
