@@ -32,19 +32,26 @@ def post(event, context):
         return bad_request("Invalid JSON body")
 
     name = body.get("name")
+    description = body.get("description")
+    address = body.get("address")
 
     if not isinstance(name, str) or not name.strip():
         return bad_request("Field 'name' (non-empty string) is required")
     name = name.strip()
 
+    if not isinstance(description, str) or not description.strip():
+        description = ""
+    if not isinstance(address, str) or not address.strip():
+        address = ""
+
     # Insert (adjust columns as per your schema; created_by_user_id optional)
     try:
         res = execute(
             """
-            INSERT INTO restaurants (account_id, name)
-            VALUES (%s, %s)
+            INSERT INTO restaurants (account_id, name, description, address)
+            VALUES (%s, %s, %s, %s)
             """,
-            (account_id, name,),
+            (account_id, name, description, address,),
         )
     except mysql_err.IntegrityError as e:
         # e.g., UNIQUE(account_id, name) violation
