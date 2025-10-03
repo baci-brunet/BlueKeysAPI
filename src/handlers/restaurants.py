@@ -88,4 +88,4 @@ def get(event, context):
     if not rows:
         return bad_request("Restaurants not found")
 
-    return ok({"restaurants": rows[0]})
+    return ok({"restaurants": rows})
